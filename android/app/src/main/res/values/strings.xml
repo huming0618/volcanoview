@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">火山预警</string>
+    <string name="title_activity_main">火山预警</string>
+    <string name="package_name">com.huming.volcanoview</string>
+    <string name="custom_url_scheme">com.huming.volcanoview</string>
+</resources>

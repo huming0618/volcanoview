@@ -1,0 +1,117 @@
+{
+  "generated_at": "2026-09-26 09:38 CST",
+  "scope": "worldwide",
+  "push": false,
+  "alerts": [
+    {
+      "id": "gdacs:1000125",
+      "level": "red",
+      "lat": -8.108,
+      "lon": 112.922,
+      "title": "Semeru",
+      "summary": "Red Eruption Semeru in Indonesia at: 24 Nov 2025 23:20.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000125&episodeid=2&eventtype=VO"
+    },
+    {
+      "id": "gdacs:1000140",
+      "level": "orange",
+      "lat": 1.6992,
+      "lon": 127.8783,
+      "title": "Dukono",
+      "summary": "Orange Eruption Dukono in Indonesia at: 08 May 2026 09:10.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000140&episodeid=1&eventtype=VO"
+    },
+    {
+      "id": "usgs:311120",
+      "level": "orange",
+      "lat": 52.0765,
+      "lon": -176.1109,
+      "title": "Great Sitkin",
+      "summary": "ORANGE/WATCH — AVO Great Sitkin ORANGE/WATCH - Slow eruption of lava continues within the summit crater associated with low-level seismicity and steaming.",
+      "updated_at": "2026-09-25 20:04 CST",
+      "source": "USGS",
+      "url": "https://volcanoes.usgs.gov/hans2/view/notice/DOI-USGS-AVO-2026-09-25T20:02:50+00:00"
+    },
+    {
+      "id": "gdacs:1000138",
+      "level": "orange",
+      "lat": 10.412,
+      "lon": 123.132,
+      "title": "Kanlaon",
+      "summary": "Orange Eruption Kanlaon in Philippines at: 15 Mar 2026 10:54.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000138&episodeid=1&eventtype=VO"
+    },
+    {
+      "id": "usgs:332010",
+      "level": "orange",
+      "lat": 19.421,
+      "lon": -155.287,
+      "title": "Kilauea",
+      "summary": "ORANGE/WATCH — HVO Kilauea ORANGE/WATCH - Precursory overflows from the north vent continue for the third day. All vents have strong glow, with overflows and intermittent spatter from the north vent. There is no anomalous activity outside of the summit.",
+      "updated_at": "2026-09-25 19:24 CST",
+      "source": "USGS",
+      "url": "https://volcanoes.usgs.gov/hans2/view/notice/DOI-USGS-HVO-2026-09-25T17:09:44+00:00"
+    },
+    {
+      "id": "gdacs:1000148",
+      "level": "orange",
+      "lat": -6.1009,
+      "lon": 105.4233,
+      "title": "Krakatau",
+      "summary": "Orange Eruption Krakatau in Indonesia at: 04 Sep 2026 21:00.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000148&episodeid=1&eventtype=VO"
+    },
+    {
+      "id": "gdacs:1000122",
+      "level": "orange",
+      "lat": -8.542,
+      "lon": 122.775,
+      "title": "Lewotobi",
+      "summary": "Orange Eruption Lewotobi in Indonesia at: 14 Oct 2025 22:00.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000122&episodeid=1&eventtype=VO"
+    },
+    {
+      "id": "gdacs:1000144",
+      "level": "orange",
+      "lat": 13.257,
+      "lon": 123.685,
+      "title": "Mayon",
+      "summary": "Orange Eruption Mayon in Philippines at: 16 Jul 2026 01:59.",
+      "updated_at": "2026-09-26 09:38 CST",
+      "source": "GDACS",
+      "url": "https://www.gdacs.org/report.aspx?eventid=1000144&episodeid=1&eventtype=VO"
+    },
+    {
+      "id": "usgs:284141",
+      "level": "yellow",
+      "lat": 20.437,
+      "lon": 145.03,
+      "title": "Ahyi Seamount",
+      "summary": "YELLOW/ADVISORY — NMI Ahyi Seamount YELLOW/ADVISORY - No plumes seen in satellite images; no significant geophysical signals.",
+      "updated_at": "2026-09-24 20:22 CST",
+      "source": "USGS",
+      "url": "https://volcanoes.usgs.gov/hans2/view/notice/DOI-USGS-NMI-2026-09-24T20:22:11+00:00"
+    },
+    {
+      "id": "usgs:311360",
+      "level": "yellow",
+      "lat": 54.7554,
+      "lon": -163.9711,
+      "title": "Shishaldin",
+      "summary": "YELLOW/ADVISORY — AVO Shishaldin YELLOW/ADVISORY - Unrest continues with small earthquakes, tremor, infrasound signals, and gas emissions.",
+      "updated_at": "2026-09-25 20:04 CST",
+      "source": "USGS",
+      "url": "https://volcanoes.usgs.gov/hans2/view/notice/DOI-USGS-AVO-2026-09-25T20:02:50+00:00"
+    }
+  ]
+}

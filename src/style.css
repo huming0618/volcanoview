@@ -1,0 +1,135 @@
+:root {
+  color-scheme: dark;
+  --bg: #0f0a0a;
+  --panel: rgba(28, 14, 14, 0.92);
+  --text: #f5ebe0;
+  --muted: #c4a99a;
+  --red: #ef4444;
+  --orange: #f97316;
+  --yellow: #eab308;
+  --border: rgba(255, 255, 255, 0.12);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC",
+    "Noto Sans SC", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
+#app { display: grid; grid-template-rows: auto 1fr; position: relative; }
+
+.top-bar {
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-top));
+  padding-top: calc(10px + env(safe-area-inset-top));
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-icon { font-size: 28px; line-height: 1; }
+.brand h1 { margin: 0; font-size: 16px; font-weight: 650; }
+.meta { margin: 2px 0 0; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 58vw; }
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn.primary { background: #7f1d1d; border-color: #991b1b; }
+.btn:active { transform: scale(0.98); }
+
+#map { width: 100%; height: 100%; min-height: 0; background: #1a1212; }
+
+.legend {
+  position: absolute;
+  z-index: 900;
+  left: 10px;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.red { background: var(--red); }
+.dot.orange { background: var(--orange); }
+.dot.yellow { background: var(--yellow); }
+
+.status {
+  position: absolute;
+  z-index: 950;
+  left: 50%;
+  top: 72px;
+  transform: translateX(-50%);
+  max-width: 90vw;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.sheet {
+  position: absolute;
+  z-index: 1100;
+  left: 0; right: 0; bottom: 0;
+  max-height: 48vh;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  backdrop-filter: blur(12px);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sheet-handle {
+  width: 40px; height: 4px; border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  margin: 10px auto 0;
+}
+.sheet-body { padding: 10px 16px 16px; }
+.sheet-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.sheet-head h2 { margin: 0; font-size: 18px; }
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #111;
+}
+.badge.red { background: var(--red); }
+.badge.orange { background: var(--orange); }
+.badge.yellow { background: var(--yellow); color: #1a1a1a; }
+.sheet-summary { margin: 0 0 8px; font-size: 14px; line-height: 1.45; color: var(--text); }
+.sheet-meta { margin: 0 0 12px; font-size: 12px; color: var(--muted); }
+.sheet-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.volcano-marker {
+  width: 18px; height: 18px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px solid rgba(0,0,0,0.45);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+.volcano-marker.red { background: var(--red); }
+.volcano-marker.orange { background: var(--orange); }
+.volcano-marker.yellow { background: var(--yellow); }
+
+.leaflet-container { font: inherit; background: #1a1212; }
