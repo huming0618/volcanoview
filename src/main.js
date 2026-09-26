@@ -1,9 +1,26 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import './style.css';
 
 const LEVEL_LABEL = { red: '红', orange: '橙', yellow: '黄' };
-const LEVEL_ORDER = { red: 0, orange: 1, yellow: 2 };
+const STATUS_LABEL = {
+  alert: '预警',
+  active: '活跃',
+  dormant: '休眠',
+  unknown: '未知',
+  extinct: '死火山',
+};
+
+/** Filters: alerts | active (alert+active+dormant) | all */
+const FILTERS = {
+  alerts: (v) => v.status === 'alert',
+  active: (v) =>
+    v.status === 'alert' || v.status === 'active' || v.status === 'dormant',
+  all: () => true,
+};
 
 const el = {
   meta: document.getElementById('meta'),
@@ -16,16 +33,19 @@ const el = {
   sheetLink: document.getElementById('sheet-link'),
   btnFit: document.getElementById('btn-fit'),
   btnClose: document.getElementById('btn-close'),
+  filters: document.getElementById('filters'),
 };
 
 /** @type {L.Map} */
 let map;
-/** @type {L.LayerGroup} */
-let markersLayer;
+/** @type {L.MarkerClusterGroup} */
+let cluster;
 /** @type {object[]} */
-let alerts = [];
+let volcanoes = [];
 /** @type {string|null} */
 let generatedAt = null;
+/** @type {'alerts'|'active'|'all'} */
+let currentFilter = 'active';
 
 function showStatus(text) {
   if (!text) {
@@ -37,31 +57,50 @@ function showStatus(text) {
   el.status.textContent = text;
 }
 
-function markerIcon(level) {
-  const lv = LEVEL_LABEL[level] ? level : 'yellow';
+function markerClass(v) {
+  if (v.status === 'alert' && LEVEL_LABEL[v.level]) return v.level;
+  if (v.status === 'active') return 'active';
+  if (v.status === 'dormant') return 'dormant';
+  if (v.status === 'extinct') return 'extinct';
+  return 'unknown';
+}
+
+function markerIcon(v) {
+  const cls = markerClass(v);
+  const size = v.status === 'alert' ? 20 : 12;
   return L.divIcon({
     className: '',
-    html: `<div class="volcano-marker ${lv}"></div>`,
-    iconSize: [18, 18],
-    iconAnchor: [9, 18],
-    popupAnchor: [0, -16],
+    html: `<div class="volcano-marker ${cls}" style="width:${size}px;height:${size}px"></div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size + 2],
   });
 }
 
-function openSheet(a) {
-  const lv = a.level || 'yellow';
-  el.sheetLevel.className = `badge ${lv}`;
-  el.sheetLevel.textContent = LEVEL_LABEL[lv] || lv;
-  el.sheetTitle.textContent = a.title || a.id;
-  el.sheetSummary.textContent = a.summary || '';
+function badgeFor(v) {
+  if (v.status === 'alert' && LEVEL_LABEL[v.level]) {
+    return { text: LEVEL_LABEL[v.level], cls: v.level };
+  }
+  const st = v.status || 'unknown';
+  return { text: STATUS_LABEL[st] || st, cls: markerClass(v) };
+}
+
+function openSheet(v) {
+  const b = badgeFor(v);
+  el.sheetLevel.className = `badge ${b.cls}`;
+  el.sheetLevel.textContent = b.text;
+  el.sheetTitle.textContent = v.title || v.id;
+  el.sheetSummary.textContent = v.summary || '';
   el.sheetMeta.textContent = [
-    a.source ? `来源 ${a.source}` : null,
-    a.updated_at ? `更新 ${a.updated_at}` : null,
+    v.country || null,
+    v.last_eruption ? `末次喷发 ${v.last_eruption}` : null,
+    v.source ? `来源 ${v.source}` : null,
+    v.updated_at ? `更新 ${v.updated_at}` : null,
   ]
     .filter(Boolean)
     .join(' · ');
-  if (a.url) {
-    el.sheetLink.href = a.url;
+  if (v.url) {
+    el.sheetLink.href = v.url;
     el.sheetLink.hidden = false;
   } else {
     el.sheetLink.hidden = true;
@@ -73,78 +112,102 @@ function closeSheet() {
   el.sheet.hidden = true;
 }
 
-function fitAll() {
-  const pts = alerts
-    .filter((a) => Number.isFinite(a.lat) && Number.isFinite(a.lon))
-    .map((a) => [a.lat, a.lon]);
+function visibleList() {
+  const pred = FILTERS[currentFilter] || FILTERS.active;
+  return volcanoes.filter(
+    (v) => Number.isFinite(v.lat) && Number.isFinite(v.lon) && pred(v),
+  );
+}
+
+function fitVisible() {
+  const pts = visibleList().map((v) => [v.lat, v.lon]);
   if (!pts.length) {
     map.setView([20, 0], 2);
     return;
   }
-  map.fitBounds(L.latLngBounds(pts), { padding: [48, 48], maxZoom: 6 });
+  map.fitBounds(L.latLngBounds(pts), {
+    padding: [56, 56],
+    maxZoom: currentFilter === 'alerts' ? 5 : 3,
+  });
 }
 
 function renderMarkers() {
-  markersLayer.clearLayers();
-  const sorted = [...alerts].sort(
-    (a, b) => (LEVEL_ORDER[a.level] ?? 9) - (LEVEL_ORDER[b.level] ?? 9),
-  );
-  for (const a of sorted) {
-    if (!Number.isFinite(a.lat) || !Number.isFinite(a.lon)) continue;
-    const m = L.marker([a.lat, a.lon], {
-      icon: markerIcon(a.level),
-      title: a.title,
-      zIndexOffset: 1000 - (LEVEL_ORDER[a.level] ?? 9) * 10,
+  cluster.clearLayers();
+  const list = visibleList();
+  // Alerts on top: add others first
+  const ordered = [...list].sort((a, b) => {
+    const ao = a.status === 'alert' ? 0 : 1;
+    const bo = b.status === 'alert' ? 0 : 1;
+    return bo - ao;
+  });
+  const layers = [];
+  for (const v of ordered) {
+    const m = L.marker([v.lat, v.lon], {
+      icon: markerIcon(v),
+      title: v.title,
+      zIndexOffset: v.status === 'alert' ? 1000 : 0,
     });
-    m.on('click', () => openSheet(a));
-    markersLayer.addLayer(m);
+    m.on('click', () => openSheet(v));
+    layers.push(m);
   }
+  cluster.addLayers(layers);
+  updateMeta(list.length);
 }
 
-function updateMeta() {
-  const n = alerts.length;
-  const counts = { red: 0, orange: 0, yellow: 0 };
-  for (const a of alerts) {
-    if (counts[a.level] != null) counts[a.level] += 1;
+function updateMeta(shown) {
+  const counts = { alert: 0, active: 0, dormant: 0, unknown: 0, extinct: 0 };
+  for (const v of volcanoes) {
+    if (counts[v.status] != null) counts[v.status] += 1;
   }
-  const parts = [
-    `${n} 条预警`,
-    counts.red ? `红 ${counts.red}` : null,
-    counts.orange ? `橙 ${counts.orange}` : null,
-    counts.yellow ? `黄 ${counts.yellow}` : null,
+  const filterLabel =
+    currentFilter === 'alerts'
+      ? '仅预警'
+      : currentFilter === 'all'
+        ? '全部'
+        : '活跃+休眠';
+  el.meta.textContent = [
+    `显示 ${shown}`,
+    `库 ${volcanoes.length}`,
+    filterLabel,
+    counts.alert ? `预警 ${counts.alert}` : null,
     generatedAt ? `数据 ${generatedAt}` : null,
-  ].filter(Boolean);
-  el.meta.textContent = parts.join(' · ');
+  ]
+    .filter(Boolean)
+    .join(' · ');
 }
 
-async function loadAlerts() {
-  const urls = [
-    new URL('alerts.json', import.meta.url.replace(/\/assets\/.*$/, '/')).href,
-    './alerts.json',
-    'alerts.json',
-  ];
-  // Prefer root-relative for Vite/Capacitor public assets
+function setFilter(name) {
+  if (!FILTERS[name]) return;
+  currentFilter = name;
+  for (const btn of el.filters.querySelectorAll('.filter-btn')) {
+    btn.classList.toggle('active', btn.dataset.filter === name);
+  }
+  closeSheet();
+  renderMarkers();
+  fitVisible();
+}
+
+async function fetchJson(name) {
   const candidates = [
-    new URL('alerts.json', window.location.href).href,
-    `${import.meta.env.BASE_URL}alerts.json`.replace(/\/{2,}/g, '/').replace(':/', '://'),
+    new URL(name, window.location.href).href,
+    `${import.meta.env.BASE_URL}${name}`.replace(/\/{2,}/g, '/').replace(':/', '://'),
+    `./${name}`,
+    name,
   ];
-  // Deduplicate
   const tried = new Set();
   let lastErr = null;
-  for (const u of [...candidates, ...urls]) {
+  for (const u of candidates) {
     if (!u || tried.has(u)) continue;
     tried.add(u);
     try {
       const res = await fetch(u, { cache: 'no-store' });
       if (!res.ok) throw new Error(`${res.status} ${u}`);
-      const data = await res.json();
-      if (!data || !Array.isArray(data.alerts)) throw new Error('bad schema');
-      return data;
+      return await res.json();
     } catch (e) {
       lastErr = e;
     }
   }
-  throw lastErr || new Error('alerts.json not found');
+  throw lastErr || new Error(`${name} not found`);
 }
 
 function addBaseTiles() {
@@ -173,31 +236,49 @@ async function init() {
   map = L.map('map', {
     zoomControl: false,
     attributionControl: true,
+    maxZoom: 18,
   }).setView([20, 120], 3);
   L.control.zoom({ position: 'topright' }).addTo(map);
   addBaseTiles();
-  markersLayer = L.layerGroup().addTo(map);
+
+  cluster = L.markerClusterGroup({
+    maxClusterRadius: 48,
+    showCoverageOnHover: false,
+    spiderfyOnMaxZoom: true,
+    disableClusteringAtZoom: 8,
+    chunkedLoading: true,
+  });
+  map.addLayer(cluster);
 
   el.btnFit.addEventListener('click', () => {
     closeSheet();
-    fitAll();
+    fitVisible();
   });
   el.btnClose.addEventListener('click', closeSheet);
   map.on('click', closeSheet);
+  el.filters.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    setFilter(btn.dataset.filter);
+  });
 
-  showStatus('加载预警数据…');
+  showStatus('加载火山数据…');
   try {
-    const data = await loadAlerts();
-    alerts = data.alerts || [];
+    const data = await fetchJson('volcanoes.json');
+    volcanoes = Array.isArray(data.volcanoes) ? data.volcanoes : [];
     generatedAt = data.generated_at || null;
-    renderMarkers();
-    updateMeta();
-    fitAll();
+    if (!volcanoes.length) {
+      // fallback to alerts-only file
+      const a = await fetchJson('alerts.json');
+      volcanoes = (a.alerts || []).map((x) => ({ ...x, status: 'alert' }));
+      generatedAt = a.generated_at || generatedAt;
+    }
+    setFilter('active');
     showStatus('');
   } catch (e) {
     console.error(e);
-    el.meta.textContent = '预警数据加载失败';
-    showStatus('无法读取 alerts.json');
+    el.meta.textContent = '数据加载失败';
+    showStatus('无法读取 volcanoes.json');
   }
 }
 

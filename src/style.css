@@ -133,3 +133,51 @@ html, body, #app { height: 100%; margin: 0; background: var(--bg); color: var(--
 .volcano-marker.yellow { background: var(--yellow); }
 
 .leaflet-container { font: inherit; background: #1a1212; }
+
+.filters {
+  position: absolute;
+  z-index: 1000;
+  top: calc(58px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.filter-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-btn.active {
+  background: rgba(255,255,255,0.12);
+  color: var(--text);
+  font-weight: 600;
+}
+.dot.active { background: #fb7185; }
+.dot.dormant { background: #94a3b8; }
+.volcano-marker.active { background: #fb7185; border-radius: 50%; transform: none; }
+.volcano-marker.dormant { background: #64748b; border-radius: 50%; transform: none; opacity: 0.85; }
+.volcano-marker.unknown { background: #475569; border-radius: 50%; transform: none; opacity: 0.7; }
+.volcano-marker.extinct { background: #334155; border-radius: 50%; transform: none; opacity: 0.55; }
+.badge.active { background: #fb7185; color: #111; }
+.badge.dormant { background: #94a3b8; color: #111; }
+.badge.unknown { background: #64748b; color: #111; }
+.badge.extinct { background: #475569; color: #eee; }
+.marker-cluster-small { background: rgba(239, 68, 68, 0.25) !important; }
+.marker-cluster-small div { background: rgba(239, 68, 68, 0.75) !important; color: #fff !important; }
+.marker-cluster-medium { background: rgba(249, 115, 22, 0.25) !important; }
+.marker-cluster-medium div { background: rgba(249, 115, 22, 0.8) !important; color: #fff !important; }
+.marker-cluster-large { background: rgba(234, 179, 8, 0.25) !important; }
+.marker-cluster-large div { background: rgba(180, 83, 9, 0.85) !important; color: #fff !important; }
+#app { position: relative; }

@@ -17,17 +17,24 @@
         <div class="brand">
           <span class="brand-icon" aria-hidden="true">🌋</span>
           <div>
-            <h1>火山预警</h1>
+            <h1>火山地图</h1>
             <p id="meta" class="meta">加载中…</p>
           </div>
         </div>
-        <button id="btn-fit" type="button" class="btn">全部预警</button>
+        <button id="btn-fit" type="button" class="btn">适应视野</button>
       </header>
-      <div id="map" aria-label="火山预警地图"></div>
-      <div id="legend" class="legend" aria-label="等级图例">
-        <span><i class="dot red"></i>红</span>
+      <div id="filters" class="filters" role="tablist" aria-label="显示范围">
+        <button type="button" class="filter-btn" data-filter="alerts" role="tab">仅预警</button>
+        <button type="button" class="filter-btn active" data-filter="active" role="tab">活跃+休眠</button>
+        <button type="button" class="filter-btn" data-filter="all" role="tab">全部</button>
+      </div>
+      <div id="map" aria-label="火山地图"></div>
+      <div id="legend" class="legend" aria-label="图例">
+        <span><i class="dot red"></i>红警</span>
         <span><i class="dot orange"></i>橙</span>
         <span><i class="dot yellow"></i>黄</span>
+        <span><i class="dot active"></i>活跃</span>
+        <span><i class="dot dormant"></i>休眠</span>
       </div>
       <div id="status" class="status" hidden></div>
       <aside id="sheet" class="sheet" hidden>
