@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-09-26 22:23 CST",
-  "source": "Smithsonian GVP Holocene + USGS/GDACS alerts + OpenStreetMap extinct volcanoes",
-  "note": "Filters: 仅预警→alert; 活跃+休眠→alert|active|dormant; 全部→含 unknown+extinct。extinct 来自 OSM volcano:status=extinct（有名称的点）。",
+  "generated_at": "2026-09-27 14:05 CST",
+  "source": "Smithsonian GVP Holocene + USGS/GDACS alerts + OpenStreetMap extinct + manual China supplements",
+  "note": "Filters: 仅预警→alert; 活跃+休眠→alert|active|dormant; 全部→含 unknown+extinct。extinct 含 OSM + 手动补录（如乌兰哈达火山群）。",
   "counts": {
     "alert": 10,
     "active": 320,
     "dormant": 329,
     "unknown": 301,
-    "extinct": 606
+    "extinct": 612
   },
   "volcanoes": [
     {
@@ -18683,6 +18683,66 @@
       "updated_at": "2026-09-26 22:23 CST"
     },
     {
+      "id": "manual:wulanhada:field:乌兰哈达火山群",
+      "lat": 41.585,
+      "lon": 113.115,
+      "title": "乌兰哈达火山群",
+      "summary": "extinct · 内蒙古乌兰察布察哈尔右翼后旗乌兰哈达苏木 · 察哈尔火山群组成部分（第四纪）",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
+    },
+    {
+      "id": "manual:wulanhada:cone:北尖山（7号火山）",
+      "lat": 41.5675,
+      "lon": 113.0905,
+      "title": "北尖山（7号火山）",
+      "summary": "extinct · 乌兰哈达火山群",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
+    },
+    {
+      "id": "manual:wulanhada:cone:北炼丹炉（3号火山）",
+      "lat": 41.6142,
+      "lon": 113.1561,
+      "title": "北炼丹炉（3号火山）",
+      "summary": "extinct · 乌兰哈达火山群",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
+    },
+    {
+      "id": "manual:wulanhada:cone:南尖山（8号火山）",
+      "lat": 41.5531,
+      "lon": 113.0856,
+      "title": "南尖山（8号火山）",
+      "summary": "extinct · 乌兰哈达火山群",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
+    },
+    {
+      "id": "manual:wulanhada:cone:南炼丹炉（6号火山）",
+      "lat": 41.5822,
+      "lon": 113.1024,
+      "title": "南炼丹炉（6号火山）",
+      "summary": "extinct · 乌兰哈达火山群",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
+    },
+    {
       "id": "osm:n427644887",
       "lat": 48.6503,
       "lon": 126.0356,
@@ -18801,6 +18861,18 @@
       "last_eruption": "extinct",
       "country": "",
       "updated_at": "2026-09-26 22:23 CST"
+    },
+    {
+      "id": "manual:wulanhada:cone:黑敖包（4号火山）",
+      "lat": 41.603,
+      "lon": 113.1256,
+      "title": "黑敖包（4号火山）",
+      "summary": "extinct · 乌兰哈达火山群",
+      "status": "extinct",
+      "level": null,
+      "last_eruption": "extinct",
+      "country": "China",
+      "updated_at": "2026-09-27 14:05 CST"
     }
   ]
 }
