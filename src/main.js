@@ -4,6 +4,14 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import './style.css';
+import {
+  createCachedTileLayer,
+  warmCacheFromBundled,
+  syncOfflineZoomLimits,
+  isOnline,
+  prefetchTiles,
+  SEEDED_MAX_ZOOM,
+} from './tileCache.js';
 
 const LEVEL_LABEL = { red: '红', orange: '橙', yellow: '黄' };
 const STATUS_LABEL = {
@@ -106,6 +114,8 @@ function openSheet(v) {
     el.sheetLink.hidden = true;
   }
   el.sheet.hidden = false;
+  const reg = regionForVolcano(v);
+  if (reg) prefetchRegion(reg);
 }
 
 function closeSheet() {
@@ -210,26 +220,44 @@ async function fetchJson(name) {
   throw lastErr || new Error(`${name} not found`);
 }
 
+/** @type {import('leaflet').TileLayer|null} */
+let baseTiles = null;
+/** @type {object[]} */
+let offlineRegions = [];
+
 function addBaseTiles() {
-  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  baseTiles = createCachedTileLayer(L, {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
     maxZoom: 18,
-    attribution: '&copy; OpenStreetMap',
+    maxNativeZoom: SEEDED_MAX_ZOOM,
   });
-  const carto = L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-    {
-      maxZoom: 18,
-      subdomains: 'abcd',
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-    },
-  );
-  osm.on('tileerror', () => {
-    if (!map.hasLayer(carto)) {
-      map.removeLayer(osm);
-      carto.addTo(map);
-    }
-  });
-  osm.addTo(map);
+  baseTiles.addTo(map);
+  syncOfflineZoomLimits(map, baseTiles);
+  window.addEventListener('online', () => syncOfflineZoomLimits(map, baseTiles));
+  window.addEventListener('offline', () => syncOfflineZoomLimits(map, baseTiles));
+}
+
+async function loadOfflineRegions() {
+  try {
+    const data = await fetchJson('offline-regions.json');
+    offlineRegions = Array.isArray(data.regions) ? data.regions : [];
+  } catch {
+    offlineRegions = [];
+  }
+}
+
+function regionForVolcano(v) {
+  if (!v) return null;
+  return offlineRegions.find((r) => r.id === v.id) || null;
+}
+
+function prefetchRegion(region) {
+  if (!region?.bbox || !isOnline()) return;
+  const b = region.bbox;
+  const bounds = L.latLngBounds([b.south, b.west], [b.north, b.east]);
+  const z0 = Math.max(region.zmin ?? 11, 11);
+  const z1 = Math.min(region.zmax ?? SEEDED_MAX_ZOOM, SEEDED_MAX_ZOOM);
+  prefetchTiles(bounds, z0, z1).catch(() => {});
 }
 
 async function init() {
@@ -264,16 +292,20 @@ async function init() {
 
   showStatus('加载火山数据…');
   try {
+    await loadOfflineRegions();
+    await warmCacheFromBundled();
+    syncOfflineZoomLimits(map, baseTiles);
     const data = await fetchJson('volcanoes.json');
     volcanoes = Array.isArray(data.volcanoes) ? data.volcanoes : [];
     generatedAt = data.generated_at || null;
     if (!volcanoes.length) {
-      // fallback to alerts-only file
       const a = await fetchJson('alerts.json');
       volcanoes = (a.alerts || []).map((x) => ({ ...x, status: 'alert' }));
       generatedAt = a.generated_at || generatedAt;
     }
-    setFilter('active');
+    setFilter('alerts');
+    // Warm runtime cache for alert regions when online
+    for (const r of offlineRegions) prefetchRegion(r);
     showStatus('');
   } catch (e) {
     console.error(e);
