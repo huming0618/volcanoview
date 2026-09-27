@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-09-27 10:02 CST",
+  "policy": "alert-only",
+  "radius_km": 40.0,
+  "zmin": 11,
+  "zmax": 14,
+  "note": "Offline tile regions for volcano alert points (~40 km, zoom 11–14). Map shell may also warm-cache by viewport.",
+  "regions": [
+    {
+      "id": "gdacs:1000125",
+      "title": "Semeru",
+      "level": "red",
+      "lat": -8.108,
+      "lon": 112.922,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": -8.4673,
+        "west": 112.559,
+        "north": -7.7487,
+        "east": 113.285
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "gdacs:1000140",
+      "title": "Dukono",
+      "level": "orange",
+      "lat": 1.6992,
+      "lon": 127.8783,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 1.3399,
+        "west": 127.5188,
+        "north": 2.0585,
+        "east": 128.2378
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "usgs:311120",
+      "title": "Great Sitkin",
+      "level": "orange",
+      "lat": 52.0765,
+      "lon": -176.1109,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 51.7172,
+        "west": -176.6955,
+        "north": 52.4358,
+        "east": -175.5263
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "gdacs:1000138",
+      "title": "Kanlaon",
+      "level": "orange",
+      "lat": 10.412,
+      "lon": 123.132,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 10.0527,
+        "west": 122.7667,
+        "north": 10.7713,
+        "east": 123.4973
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "usgs:332010",
+      "title": "Kilauea",
+      "level": "orange",
+      "lat": 19.421,
+      "lon": -155.287,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 19.0617,
+        "west": -155.668,
+        "north": 19.7803,
+        "east": -154.906
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "gdacs:1000148",
+      "title": "Krakatau",
+      "level": "orange",
+      "lat": -6.1009,
+      "lon": 105.4233,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": -6.4602,
+        "west": 105.0619,
+        "north": -5.7416,
+        "east": 105.7847
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "gdacs:1000122",
+      "title": "Lewotobi",
+      "level": "orange",
+      "lat": -8.542,
+      "lon": 122.775,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": -8.9013,
+        "west": 122.4116,
+        "north": -8.1827,
+        "east": 123.1384
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "gdacs:1000144",
+      "title": "Mayon",
+      "level": "orange",
+      "lat": 13.257,
+      "lon": 123.685,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 12.8977,
+        "west": 123.3158,
+        "north": 13.6163,
+        "east": 124.0542
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "usgs:284141",
+      "title": "Ahyi Seamount",
+      "level": "yellow",
+      "lat": 20.437,
+      "lon": 145.03,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 20.0777,
+        "west": 144.6465,
+        "north": 20.7963,
+        "east": 145.4135
+      },
+      "zmin": 11,
+      "zmax": 14
+    },
+    {
+      "id": "usgs:311360",
+      "title": "Shishaldin",
+      "level": "yellow",
+      "lat": 54.7554,
+      "lon": -163.9711,
+      "radius_km": 40.0,
+      "bbox": {
+        "south": 54.3961,
+        "west": -164.5938,
+        "north": 55.1147,
+        "east": -163.3484
+      },
+      "zmin": 11,
+      "zmax": 14
+    }
+  ]
+}
